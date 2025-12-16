@@ -47,7 +47,7 @@
 (menu-bar-mode 1)
 (scroll-bar-mode 0)
 
-;; Change C-k behavior as C-a C-k
+;; Delete line C-k
 (setq kill-whole-line t)
 
 ;; Stop saving ~ backup files
@@ -55,8 +55,21 @@
 
 ;; Set default font
 (set-face-attribute 'default nil
-                    :font "Lilex Nerd Font"
-                    :height 140)  ;; 130 = 13pt
+                    :height 140)
+
+;; Show whitespace and tabs
+(require 'whitespace)
+
+(setq whitespace-style
+      '(face spaces tabs space-mark tab-mark))
+
+(setq whitespace-display-mappings
+      '(
+        (space-mark ?\  [?·])      ; space -> middle dot
+        (tab-mark   ?\t [?» ?\t])  ; tab -> » followed by tab
+        ))
+
+(global-whitespace-mode 1)
 
 ;; Show relative line numbers
 (global-display-line-numbers-mode 1)
@@ -68,8 +81,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(line-number ((t (:foreground "#555555"))))
- '(line-number-current-line ((t (:foreground "#ffffff")))))
+ )
 
 ;; Clean startup
 (setq inhibit-startup-screen t
@@ -86,4 +98,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ '(package-selected-packages '(gruber-darker-theme)))
