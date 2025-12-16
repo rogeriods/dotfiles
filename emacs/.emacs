@@ -47,9 +47,16 @@
 (menu-bar-mode 1)
 (scroll-bar-mode 0)
 
+;; Change C-k behavior as C-a C-k
+(setq kill-whole-line t)
+
+;; Stop saving ~ backup files
+(setq make-backup-files nil)
+
 ;; Set default font
 (set-face-attribute 'default nil
-                    :height 140)
+                    :font "Lilex Nerd Font"
+                    :height 140)  ;; 130 = 13pt
 
 ;; Show relative line numbers
 (global-display-line-numbers-mode 1)
@@ -61,7 +68,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(line-number ((t (:foreground "#555555"))))
+ '(line-number-current-line ((t (:foreground "#ffffff")))))
 
 ;; Clean startup
 (setq inhibit-startup-screen t
@@ -78,4 +86,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(gruber-darker-theme)))
+ '(package-selected-packages nil))
