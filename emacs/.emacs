@@ -1,31 +1,72 @@
+;; ----------------------------
+;; Package system
+;; ----------------------------
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-;;(package-initialize)
 
-;; Gruber Darker theme
-(unless (package-installed-p 'gruber-darker-theme)
-  (package-refresh-contents)
-  (package-install 'gruber-darker-theme))
+(setq package-archives
+      '(("melpa" . "https://melpa.org/packages/")
+        ("gnu"   . "https://elpa.gnu.org/packages/")))
 
-(mapc #'disable-theme custom-enabled-themes)
-(load-theme 'gruber-darker t)
-
-;; Autocomplete and syntax help for C
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (package-initialize)
 
-(unless (package-installed-p 'company)
-  (package-refresh-contents)
-  (package-install 'company))
+(unless package-archive-contents
+  (package-refresh-contents))
 
-(add-hook 'after-init-hook 'global-company-mode)
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 
-;; C programing basics
+(require 'use-package)
+(setq use-package-always-ensure t)
+
+;; ----------------------------
+;; LSP (Java, YAML, Spring)
+;; ----------------------------
+(use-package lsp-mode
+  :commands lsp
+  :hook ((java-mode . lsp)
+         (yaml-mode . lsp))
+  :config
+  (setq lsp-java-save-action-organize-imports t
+        lsp-java-format-enabled t))
+
+(use-package lsp-java)
+
+(use-package lsp-ui
+  :commands lsp-ui-mode)
+
+(use-package lsp-treemacs)
+
+;; ----------------------------
+;; YAML
+;; ----------------------------
+(use-package yaml-mode)
+
+;; ----------------------------
+;; Maven
+;; ----------------------------
+(use-package mvn)
+
+;; ----------------------------
+;; Theme
+;; ----------------------------
+(use-package gruber-darker-theme
+  :config
+  (mapc #'disable-theme custom-enabled-themes)
+  (load-theme 'gruber-darker t))
+
+;; ----------------------------
+;; Completion
+;; ----------------------------
+(use-package company
+  :hook (after-init . global-company-mode))
+
+;; ----------------------------
+;; C programming
+;; ----------------------------
 (setq c-default-style "linux"
-      c-basic-offset 4)
+      c-basic-offset 4
+      indent-tabs-mode nil)
 
-;; One-key to build and run C
 (defun my-c-build ()
   (interactive)
   (compile "gcc -Wall -Wextra -g main.c -o main -lm"))
@@ -37,65 +78,59 @@
 (add-hook 'c-mode-hook
           (lambda ()
             (local-set-key (kbd "<f5>") #'my-c-build)
-            (local-set-key (kbd "<f6>") #'my-c-run)))
+            (local-set-key (kbd "<f6>") #'my-c-run)
+            (c-set-offset 'substatement-open 0)))
 
-;; Highlight matching parentheses
+;; ----------------------------
+;; Editor behavior
+;; ----------------------------
 (show-paren-mode 1)
-
-;; Disable the not-so-useful tool and scroll bars
-(tool-bar-mode 0)
-(menu-bar-mode 1)
-(scroll-bar-mode 0)
-
-;; Delete line C-k
 (setq kill-whole-line t)
-
-;; Stop saving ~ backup files
 (setq make-backup-files nil)
 
-;; Set default font
-(set-face-attribute 'default nil
-                    :height 140)
+;; Auto indent & column guide
+(setq-default fill-column 80)
+(setq-default display-fill-column-indicator-column 80)
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
+(add-hook 'text-mode-hook #'display-fill-column-indicator-mode)
 
-;; Show whitespace and tabs
-(require 'whitespace)
+;; ----------------------------
+;; Whitespace
+;; ----------------------------
+(use-package whitespace
+  :config
+  (setq whitespace-style '(face spaces tabs space-mark tab-mark)
+        whitespace-display-mappings
+        '((space-mark ?\  [?·])
+          (tab-mark ?\t [?» ?\t])))
+  (global-whitespace-mode 1))
 
-(setq whitespace-style
-      '(face spaces tabs space-mark tab-mark))
-
-(setq whitespace-display-mappings
-      '(
-        (space-mark ?\  [?·])      ; space -> middle dot
-        (tab-mark   ?\t [?» ?\t])  ; tab -> » followed by tab
-        ))
-
-(global-whitespace-mode 1)
-
-;; Show relative line numbers
-(global-display-line-numbers-mode 1)
+;; ----------------------------
+;; Line numbers
+;; ----------------------------
 (setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode 1)
 
-;; Line numbers better look for gruber darker theme
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;; ----------------------------
+;; UI cleanup
+;; ----------------------------
+(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(menu-bar-mode 1)
 
-;; Clean startup
 (setq inhibit-startup-screen t
       inhibit-startup-message t
       inhibit-startup-echo-area-message t)
 
-;; Auto-indent on Enter
-(add-hook 'c-mode-hook
- (lambda ()
-   (setq indent-tabs-mode nil)
-   (c-set-offset 'substatement-open 0)))
+;; ----------------------------
+;; Font
+;; ----------------------------
+(set-face-attribute 'default nil :height 140)
+
+;; ----------------------------
+;; Custom (leave as-is)
+;; ----------------------------
 (custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
  '(package-selected-packages '(gruber-darker-theme)))
+
+(custom-set-faces)
