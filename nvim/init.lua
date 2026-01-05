@@ -23,12 +23,13 @@ vim.opt.scrolloff = 8
 vim.opt.signcolumn = 'yes'
 vim.opt.isfname:append '@-@'
 vim.opt.updatetime = 50
-vim.opt.colorcolumn = '120'
+vim.opt.colorcolumn = { '80', '120' }
 
 -- vim.o.guicursor = ''
 vim.o.mouse = 'a'
 vim.o.ignorecase = true
 vim.o.smartcase = true
+vim.o.showmode = false
 
 -- Sync clipboard between OS and Neovim.
 vim.schedule(function()
@@ -291,9 +292,10 @@ require('lazy').setup {
             -- Enable the following language servers
             local servers = {
                 clangd = {},
-                -- gopls = {},
+                gopls = {},
                 -- pyright = {},
                 -- ts_ls = {},
+                rust_analyzer = {},
 
                 lua_ls = {
                     settings = {
@@ -419,6 +421,82 @@ require('lazy').setup {
         },
     },
 
+    -- Gruber dark
+    {
+        'blazkowolf/gruber-darker.nvim',
+        opts = {
+            bold = false,
+            invert = {
+                signs = false,
+                tabline = false,
+                visual = false,
+            },
+            italic = {
+                strings = true,
+                comments = false,
+                operators = false,
+                folds = true,
+            },
+            undercurl = true,
+            underline = true,
+        },
+        config = function()
+            vim.cmd 'colorscheme gruber-darker'
+        end,
+    },
+
+    -- lua/plugins/rose-pine.lua
+    {
+        'rose-pine/neovim',
+        name = 'rose-pine',
+        config = function()
+            require('rose-pine').setup {
+                variant = 'auto', -- auto, main, moon, or dawn
+                dark_variant = 'main', -- main, moon, or dawn
+                dim_inactive_windows = false,
+                extend_background_behind_borders = true,
+                disable_background = true,
+
+                enable = {
+                    terminal = true,
+                    legacy_highlights = true, -- Improve compatibility for previous versions of Neovim
+                    migrations = true, -- Handle deprecated options automatically
+                },
+
+                styles = {
+                    bold = true,
+                    italic = false,
+                    transparency = false,
+                },
+
+                groups = {},
+
+                palette = {},
+
+                highlight_groups = {
+                    Comment = { italic = true },
+                },
+
+                before_highlight = function(group, highlight, palette)
+                    -- Disable all undercurls
+                    -- if highlight.undercurl then
+                    --     highlight.undercurl = false
+                    -- end
+                    --
+                    -- Change palette colour
+                    -- if highlight.fg == palette.pine then
+                    --     highlight.fg = palette.foam
+                    -- end
+                end,
+            }
+
+            -- vim.cmd("colorscheme rose-pine")
+            -- vim.cmd 'colorscheme rose-pine-main'
+            -- vim.cmd("colorscheme rose-pine-moon")
+            -- vim.cmd 'colorscheme rose-pine-dawn'
+        end,
+    },
+
     { -- Tokyonight theme.
         'folke/tokyonight.nvim',
         priority = 1000, -- Make sure to load this before all the other start plugins.
@@ -430,7 +508,45 @@ require('lazy').setup {
                     comments = { italic = true }, -- Disable italics in comments
                 },
             }
-            vim.cmd.colorscheme 'tokyonight-night'
+            -- vim.cmd.colorscheme 'tokyonight-day'
+        end,
+    },
+
+    { -- Collection of various small independent plugins/modules
+        'echasnovski/mini.nvim',
+        config = function()
+            -- Better Around/Inside textobjects
+            --
+            -- Examples:
+            --  - va)  - [V]isually select [A]round [)]paren
+            --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
+            --  - ci'  - [C]hange [I]nside [']quote
+            require('mini.ai').setup { n_lines = 500 }
+
+            -- Add/delete/replace surroundings (brackets, quotes, etc.)
+            --
+            -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
+            -- - sd'   - [S]urround [D]elete [']quotes
+            -- - sr)'  - [S]urround [R]eplace [)] [']
+            require('mini.surround').setup()
+
+            -- Simple and easy statusline.
+            --  You could remove this setup call if you don't like it,
+            --  and try some other statusline plugin
+            local statusline = require 'mini.statusline'
+            -- set use_icons to true if you have a Nerd Font
+            statusline.setup { use_icons = vim.g.have_nerd_font }
+
+            -- You can configure sections in the statusline by overriding their
+            -- default behavior. For example, here we set the section for
+            -- cursor location to LINE:COLUMN
+            ---@diagnostic disable-next-line: duplicate-set-field
+            statusline.section_location = function()
+                return '%2l:%-2v'
+            end
+
+            -- ... and there is more!
+            --  Check out: https://github.com/echasnovski/mini.nvim
         end,
     },
 

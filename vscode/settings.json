@@ -1,7 +1,5 @@
 {
   "workbench.startupEditor": "none",
-  "workbench.productIconTheme": "fluent-icons",
-  "workbench.iconTheme": "symbols",
   "editor.minimap.enabled": false,
   "window.restoreWindows": "none",
   "workbench.editor.labelFormat": "short",
@@ -16,30 +14,19 @@
   "terminal.integrated.showExitAlert": false,
   "explorer.compactFolders": true,
   "breadcrumbs.enabled": false,
-  "editor.fontFamily": "JetBrainsMono Nerd Font Mono",
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.bracketPairColorization.enabled": false,
   "editor.formatOnSave": true,
-  "editor.rulers": [120],
+  "editor.rulers": [
+    120
+  ],
   "files.associations": {
     ".env.*": "dotenv",
     ".prettierrc": "json",
     "*.css": "css",
     ".dev.vars": "dotenv"
   },
-  "redhat.telemetry.enabled": true,
-  "workbench.colorTheme": "Dark Rose",
-  "[html]": {
-    "editor.suggest.insertMode": "replace",
-    "editor.rulers": [160]
-  },
-  "[go]": {
-    "editor.insertSpaces": false,
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "golang.go",
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
-    }
-  },
-  "explorer.confirmDragAndDrop": false
+  "explorer.confirmDragAndDrop": false,
+  "workbench.productIconTheme": "fluent-icons",
+  "workbench.iconTheme": "symbols",
+  "workbench.colorTheme": "Tsoding Emacs Gruber Minimal"
 }
