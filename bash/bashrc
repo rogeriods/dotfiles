@@ -1,0 +1,19 @@
+# SET IN RED GIT (BRANCH) ON TERMINAL
+# Load git prompt support
+if [ -f /usr/share/git-core/contrib/completion/git-prompt.sh ]; then
+    source /usr/share/git-core/contrib/completion/git-prompt.sh
+fi
+
+# Show git branch in prompt
+export GIT_PS1_SHOWDIRTYSTATE=1
+export GIT_PS1_SHOWUNTRACKEDFILES=1
+
+# Colors
+RED='\[\e[31m\]'
+RESET='\[\e[0m\]'
+
+# Prompt: red git branch
+PS1='[\u@\h \W]'"${RED}"'$(__git_ps1 " (%s)")'"${RESET}"'\$ '
+
+# Custom prompt: [user@host dir] (branch) $
+# PS1='[\u@\h \W]$(__git_ps1 " (%s)") \$ '

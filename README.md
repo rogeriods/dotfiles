@@ -1,3 +1,3 @@
 # Dotfiles
 
-> My personal dotfiles for coding.
+> My personal Linux dotfiles for coding.
