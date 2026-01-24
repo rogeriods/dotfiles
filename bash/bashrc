@@ -9,7 +9,7 @@ export GIT_PS1_SHOWDIRTYSTATE=1
 export GIT_PS1_SHOWUNTRACKEDFILES=1
 
 # Colors
-RED='\[\e[31m\]'
+RED='\[\e[38;2;239;41;41m\]'
 RESET='\[\e[0m\]'
 
 # Prompt: red git branch
