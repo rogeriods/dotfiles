@@ -1,5 +1,3 @@
--- :Tutor
-
 -- Set <space> as the leader key
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -11,9 +9,7 @@ vim.o.relativenumber = true
 vim.o.mouse = 'a'
 
 -- Sync clipboard between OS and Neovim.
-vim.schedule(function()
-  vim.o.clipboard = 'unnamedplus'
-end)
+vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
 
 vim.o.breakindent = true
 vim.o.undofile = true
@@ -30,9 +26,11 @@ vim.o.softtabstop = 4
 vim.o.shiftwidth = 4
 vim.o.expandtab = true
 vim.o.smartindent = true
+vim.opt.colorcolumn = '90'
+vim.opt.termguicolors = true
 
 -- Sets how neovim will display certain whitespace characters in the editor.
-vim.o.list = false
+vim.o.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 vim.o.inccommand = 'split'
@@ -42,7 +40,6 @@ vim.o.scrolloff = 10
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
-vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 vim.keymap.set('n', '<leader>pv', vim.cmd.Ex)
 
 -- Move selected text up/down
@@ -55,9 +52,7 @@ vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
-  callback = function()
-    vim.hl.on_yank()
-  end,
+  callback = function() vim.hl.on_yank() end,
 })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
@@ -65,9 +60,7 @@ local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   local out = vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
-  if vim.v.shell_error ~= 0 then
-    error('Error cloning lazy.nvim:\n' .. out)
-  end
+  if vim.v.shell_error ~= 0 then error('Error cloning lazy.nvim:\n' .. out) end
 end
 
 ---@type vim.Option
@@ -84,9 +77,7 @@ require('lazy').setup {
   { -- Undo tree list
     'mbbill/undotree',
     opts = {},
-    config = function()
-      vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = '[U]ndo Tree' })
-    end,
+    config = function() vim.keymap.set('n', '<leader>u', vim.cmd.UndotreeToggle, { desc = '[U]ndo Tree' }) end,
   },
 
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
@@ -124,9 +115,7 @@ require('lazy').setup {
       {
         'nvim-telescope/telescope-fzf-native.nvim',
         build = 'make',
-        cond = function()
-          return vim.fn.executable 'make' == 1
-        end,
+        cond = function() return vim.fn.executable 'make' == 1 end,
       },
       { 'nvim-telescope/telescope-ui-select.nvim' },
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
@@ -155,7 +144,6 @@ require('lazy').setup {
         group = vim.api.nvim_create_augroup('telescope-lsp-attach', { clear = true }),
         callback = function(event)
           local buf = event.buf
-
           vim.keymap.set('n', 'grr', builtin.lsp_references, { buffer = buf, desc = '[G]oto [R]eferences' })
           vim.keymap.set('n', 'gri', builtin.lsp_implementations, { buffer = buf, desc = '[G]oto [I]mplementation' })
           vim.keymap.set('n', 'grd', builtin.lsp_definitions, { buffer = buf, desc = '[G]oto [D]efinition' })
@@ -179,9 +167,7 @@ require('lazy').setup {
         }
       end, { desc = '[S]earch [/] in Open Files' })
 
-      vim.keymap.set('n', '<leader>sn', function()
-        builtin.find_files { cwd = vim.fn.stdpath 'config' }
-      end, { desc = '[S]earch [N]eovim files' })
+      vim.keymap.set('n', '<leader>sn', function() builtin.find_files { cwd = vim.fn.stdpath 'config' } end, { desc = '[S]earch [N]eovim files' })
     end,
   },
 
@@ -232,11 +218,7 @@ require('lazy').setup {
             })
           end
 
-          if client and client:supports_method('textDocument/inlayHint', event.buf) then
-            map('<leader>th', function()
-              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
-            end, '[T]oggle Inlay [H]ints')
-          end
+          if client and client:supports_method('textDocument/inlayHint', event.buf) then map('<leader>th', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }) end, '[T]oggle Inlay [H]ints') end
         end,
       })
 
@@ -253,16 +235,14 @@ require('lazy').setup {
       local capabilities = require('blink.cmp').get_lsp_capabilities()
       local servers = {
         clangd = {},
-        gopls = {},
+        -- gopls = {},
         -- pyright = {},
-        rust_analyzer = {},
+        -- rust_analyzer = {},
         -- ts_ls = {},
       }
 
       local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
-      })
+      vim.list_extend(ensure_installed, { 'stylua' })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -276,9 +256,7 @@ require('lazy').setup {
         on_init = function(client)
           if client.workspace_folders then
             local path = client.workspace_folders[1].name
-            if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then
-              return
-            end
+            if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then return end
           end
 
           client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
@@ -310,9 +288,7 @@ require('lazy').setup {
     keys = {
       {
         '<leader>f',
-        function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
-        end,
+        function() require('conform').format { async = true, lsp_format = 'fallback' } end,
         mode = '',
         desc = '[F]ormat buffer',
       },
@@ -345,9 +321,7 @@ require('lazy').setup {
         'L3MON4D3/LuaSnip',
         version = '2.*',
         build = (function()
-          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
-            return
-          end
+          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then return end
           return 'make install_jsregexp'
         end)(),
         dependencies = {},
@@ -379,63 +353,43 @@ require('lazy').setup {
     },
   },
 
-  { -- Status bar
-    'itchyny/lightline.vim',
-    lazy = false,
+  --[[
+    {
+        'lukas-reineke/indent-blankline.nvim',
+        main = 'ibl',
+        ---@module "ibl"
+        ---@type ibl.config
+        opts = {},
+        config = function()
+            require('ibl').setup {
+                indent = {
+                    char = '┊',
+                    highlight = { 'Whitespace' },
+                },
+                whitespace = {
+                    highlight = { 'Whitespace' },
+                    remove_blankline_trail = false,
+                },
+                scope = { enabled = false },
+            }
+        end,
+    },
+    ]]
+  --
+
+  -- lua/plugins/rose-pine.lua
+  {
+    'rose-pine/neovim',
+    name = 'rose-pine',
     config = function()
-      -- no need to also show mode in cmd line when we have bar
-      vim.o.showmode = false
-      vim.g.lightline = {
-        active = {
-          left = {
-            { 'mode', 'paste' },
-            { 'readonly', 'filename', 'modified' },
-          },
-          right = {
-            { 'lineinfo' },
-            { 'percent' },
-            { 'fileencoding', 'filetype' },
-          },
-        },
-        component_function = {
-          filename = 'LightlineFilename',
+      require('rose-pine').setup {
+        disable_background = true,
+        styles = {
+          italic = false,
         },
       }
-      function LightlineFilenameInLua(opts)
-        if vim.fn.expand '%:t' == '' then
-          return '[No Name]'
-        else
-          return vim.fn.getreg '%'
-        end
-      end
-      -- https://github.com/itchyny/lightline.vim/issues/657
-      vim.api.nvim_exec(
-        [[
-				function! g:LightlineFilename()
-					return v:lua.LightlineFilenameInLua()
-				endfunction
-				]],
-        true
-      )
-    end,
-  },
 
-  { -- Youtuber Gruvbox theme
-    'wincent/base16-nvim',
-    lazy = false,
-    priority = 1000,
-    config = function()
-      vim.cmd [[colorscheme gruvbox-dark-hard]]
-      vim.o.background = 'dark'
-      vim.cmd [[hi Normal ctermbg=NONE]]
-      -- Less visible window separator
-      vim.api.nvim_set_hl(0, 'WinSeparator', { fg = 1250067 })
-      -- Make comments more prominent
-      local bools = vim.api.nvim_get_hl(0, { name = 'Boolean' })
-      vim.api.nvim_set_hl(0, 'Comment', bools)
-      -- Make it clearly visible which argument we're at.
-      local marked = vim.api.nvim_get_hl(0, { name = 'PMenu' })
-      vim.api.nvim_set_hl(0, 'LspSignatureActiveParameter', { fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true })
+      vim.cmd 'colorscheme rose-pine'
     end,
   },
 
@@ -454,7 +408,24 @@ require('lazy').setup {
     end,
   },
 
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+  { -- Youtuber Gruvbox theme
+    'wincent/base16-nvim',
+    lazy = false,
+    priority = 1000,
+    config = function()
+      -- vim.cmd [[colorscheme gruvbox-dark-hard]]
+      vim.o.background = 'dark'
+      vim.cmd [[hi Normal ctermbg=NONE]]
+      -- Less visible window separator
+      vim.api.nvim_set_hl(0, 'WinSeparator', { fg = 1250067 })
+      -- Make comments more prominent
+      -- local bools = vim.api.nvim_get_hl(0, { name = 'Boolean' })
+      -- vim.api.nvim_set_hl(0, 'Comment', bools)
+      -- Make it clearly visible which argument we're at.
+      local marked = vim.api.nvim_get_hl(0, { name = 'PMenu' })
+      vim.api.nvim_set_hl(0, 'LspSignatureActiveParameter', { fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true })
+    end,
+  },
 
   {
     'nvim-mini/mini.nvim',
@@ -466,15 +437,68 @@ require('lazy').setup {
 
   {
     'nvim-treesitter/nvim-treesitter',
+    branch = 'master',
     config = function()
-      local filetypes = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
-      require('nvim-treesitter').install(filetypes)
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = filetypes,
-        callback = function()
-          vim.treesitter.start()
-        end,
-      })
+      require('nvim-treesitter.configs').setup {
+        -- A list of parser names, or "all"
+        ensure_installed = {
+          'vimdoc',
+          'javascript',
+          'typescript',
+          'c',
+          'lua',
+          'rust',
+          'jsdoc',
+          'bash',
+          'go',
+        },
+
+        -- Install parsers synchronously (only applied to `ensure_installed`)
+        sync_install = false,
+
+        -- Automatically install missing parsers when entering buffer
+        -- Recommendation: set to false if you don"t have `tree-sitter` CLI installed locally
+        auto_install = true,
+
+        indent = {
+          enable = true,
+        },
+
+        highlight = {
+          -- `false` will disable the whole extension
+          enable = true,
+          disable = function(lang, buf)
+            if lang == 'html' then
+              print 'disabled'
+              return true
+            end
+
+            local max_filesize = 100 * 1024 -- 100 KB
+            local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+            if ok and stats and stats.size > max_filesize then
+              vim.notify('File larger than 100KB treesitter disabled for performance', vim.log.levels.WARN, { title = 'Treesitter' })
+              return true
+            end
+          end,
+
+          -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+          -- Set this to `true` if you depend on "syntax" being enabled (like for indentation).
+          -- Using this option may slow down your editor, and you may see some duplicate highlights.
+          -- Instead of true it can also be a list of languages
+          additional_vim_regex_highlighting = { 'markdown' },
+        },
+      }
+
+      local treesitter_parser_config = require('nvim-treesitter.parsers').get_parser_configs()
+      treesitter_parser_config.templ = {
+        install_info = {
+          url = 'https://github.com/vrischmann/tree-sitter-templ.git',
+          files = { 'src/parser.c', 'src/scanner.c' },
+          branch = 'master',
+        },
+      }
+
+      vim.treesitter.language.register('templ', 'templ')
     end,
   },
 
@@ -491,6 +515,8 @@ require('lazy').setup {
         multiline_threshold = 20, -- Maximum number of lines to show for a single context
         trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
         mode = 'cursor', -- Line used to calculate context. Choices: 'cursor', 'topline'
+        -- Separator between context and content. Should be a single character string, like '-'.
+        -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
         separator = nil,
         zindex = 20, -- The Z-index of the context window
         on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching

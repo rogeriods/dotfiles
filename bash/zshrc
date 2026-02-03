@@ -1,0 +1,13 @@
+# User configuration
+export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:/usr/local/gdaily/bin
+
+# Auto-start tmux with named session on WSL
+if [ -z "$TMUX" ] \
+   && [ -z "$SSH_CONNECTION" ] \
+   && [ -n "$WSL_DISTRO_NAME" ] \
+   && [ "$TERM_PROGRAM" != "vscode" ]; then
+
+  tmux attach -t nvim || tmux new -s nvim
+fi
+
