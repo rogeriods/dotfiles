@@ -8,6 +8,6 @@ if [ -z "$TMUX" ] \
    && [ -n "$WSL_DISTRO_NAME" ] \
    && [ "$TERM_PROGRAM" != "vscode" ]; then
 
-  tmux attach -t nvim || tmux new -s nvim
+  tmux attach -t RDS || tmux new -s RDS
 fi
 
