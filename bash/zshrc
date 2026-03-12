@@ -1,7 +1,3 @@
-# User configuration
-export PATH=$PATH:/usr/local/go/bin
-export PATH=$PATH:/usr/local/gdaily/bin
-
 # Auto-start tmux with named session on WSL
 if [ -z "$TMUX" ] \
    && [ -z "$SSH_CONNECTION" ] \
@@ -10,4 +6,3 @@ if [ -z "$TMUX" ] \
 
   tmux attach -t RDS || tmux new -s RDS
 fi
-

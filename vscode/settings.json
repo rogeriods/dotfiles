@@ -5,7 +5,6 @@
   "workbench.editor.labelFormat": "short",
   "editor.fontLigatures": true,
   "editor.stickyScroll.enabled": false,
-  //"workbench.tree.enableStickyScroll": false,
   "editor.parameterHints.enabled": false,
   "editor.renderLineHighlight": "gutter",
   "typescript.updateImportsOnFileMove.enabled": "always",
@@ -15,18 +14,18 @@
   "explorer.compactFolders": true,
   "breadcrumbs.enabled": false,
   "editor.bracketPairColorization.enabled": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "editor.rulers": [
-    120
-  ],
+  //"window.zoomLevel": 1,
+  "editor.rulers": [120],
   "files.associations": {
     ".env.*": "dotenv",
     ".prettierrc": "json",
     "*.css": "css",
-    ".dev.vars": "dotenv"
+    ".dev.vars": "dotenv",
   },
   "explorer.confirmDragAndDrop": false,
-  "workbench.productIconTheme": "fluent-icons",
+  "window.menuBarVisibility": "compact",
   "workbench.iconTheme": "symbols",
-  "workbench.colorTheme": "Tsoding Emacs Gruber Minimal"
+  "workbench.colorTheme": "Rosé Pine",
 }
